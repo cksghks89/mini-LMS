@@ -1,5 +1,6 @@
-package com.example.minilms;
+package com.example.minilms.config;
 
+import com.example.minilms.MiniLmsApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
