@@ -4,6 +4,7 @@ import com.example.minilms.components.MailComponents;
 import com.example.minilms.member.entity.Member;
 import com.example.minilms.member.exception.MemberNotEmailAuthException;
 import com.example.minilms.member.model.MemberInput;
+import com.example.minilms.member.model.ResetPasswordInput;
 import com.example.minilms.member.repository.MemberRepository;
 import com.example.minilms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ public class MemberServiceImpl implements MemberService {
             return false;
         }
 
+        // password 암호화
         String encPassword = BCrypt.hashpw(memberInput.getPassword(), BCrypt.gensalt());
         String uuid = UUID.randomUUID().toString();
 
@@ -67,7 +70,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean emailAuth(String uuid) {
         Optional<Member> optionalMember = memberRepository.findByEmailAuthKey(uuid);
-        if(!optionalMember.isPresent()){
+        if (!optionalMember.isPresent()) {
             return false;
         }
 
@@ -80,16 +83,91 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public boolean sendResetPassword(ResetPasswordInput resetPasswordInput) {
+        Optional<Member> optionalMember =
+                memberRepository.findByUserIdAndUserName(
+                        resetPasswordInput.getUserId(), resetPasswordInput.getUserName()
+                );
+
+        if (!optionalMember.isPresent()) {
+            return false;
+        }
+
+        Member member = optionalMember.get();
+
+        String uuid = UUID.randomUUID().toString();
+
+        member.setResetPasswordKey(uuid);
+        member.setResetPasswordLimitDt(LocalDateTime.now().plusDays(1));
+        memberRepository.save(member);
+
+        String email = resetPasswordInput.getUserId();
+        String subject = "[mini LMS] 비밀번호 초기화 링크 안내";
+        String text = "<p>아래 링크를 눌러 비밀번호를 초기화 하세요.</p>" +
+                "<div><a = href='http://localhost:8080/member/reset/password?id="
+                + uuid + "'>비밀번호 초기화</a></div>";
+        mailComponents.sendMail(email, subject, text);
+
+        return true;
+    }
+
+    @Override
+    public boolean resetPassword(String uuid, String password) {
+        Optional<Member> optionalMember = memberRepository.findByResetPasswordKey(uuid);
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        if(member.getResetPasswordLimitDt() == null){
+            throw new RuntimeException("유효 날짜가 아닙니다. ");
+        }
+
+        if(member.getResetPasswordLimitDt().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("유효 날짜가 아닙니다. ");
+        }
+
+        String encPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        member.setPassword(encPassword);
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        memberRepository.save(member);
+
+        return true;
+    }
+
+    @Override
+    public boolean checkResetPassword(String uuid) {
+        Optional<Member> optionalMember = memberRepository.findByResetPasswordKey(uuid);
+        if(!optionalMember.isPresent()){
+            return false;
+        }
+
+        Member member = optionalMember.get();
+
+        if(member.getResetPasswordLimitDt() == null){
+            throw new RuntimeException("유효 날짜가 아닙니다. ");
+        }
+
+        if(member.getResetPasswordLimitDt().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("유효 날짜가 아닙니다. ");
+        }
+
+        return true;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<Member> optionalMember = memberRepository.findById(username);
-        if(!optionalMember.isPresent()){
+        if (!optionalMember.isPresent()) {
             throw new UsernameNotFoundException("회원 정보가 없습니다.");
         }
 
         Member member = optionalMember.get();
 
-        if(!member.isEmailAuthYn()){
+        if (!member.isEmailAuthYn()) {
             throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해 주세요.");
         }
 

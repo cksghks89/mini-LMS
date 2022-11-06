@@ -2,6 +2,7 @@ package com.example.minilms.member.controller;
 
 import com.example.minilms.member.entity.Member;
 import com.example.minilms.member.model.MemberInput;
+import com.example.minilms.member.model.ResetPasswordInput;
 import com.example.minilms.member.repository.MemberRepository;
 import com.example.minilms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,48 @@ public class MemberController {
         return "member/login";
     }
 
+    @GetMapping("/member/find/password")
+    public String findPassword() {
+        return "member/find_password";
+    }
+
     @GetMapping("/member/register")
     public String register() {
         return "member/register";
+    }
+
+    @PostMapping("/member/find/password")
+    public String findPasswordSubmit(
+            Model model,
+            ResetPasswordInput resetPasswordInput
+    ) {
+        boolean result = memberService.sendResetPassword(resetPasswordInput);
+        model.addAttribute("result", result);
+
+        return "member/find_password_result";
+    }
+
+    @GetMapping("/member/reset/password")
+    public String resetPassword(Model model, @RequestParam("id") String uuid) {
+        boolean result = memberService.checkResetPassword(uuid);
+
+        model.addAttribute("result", result);
+
+        return "member/reset_password";
+    }
+
+    @PostMapping("/member/reset/password")
+    public String resetPasswordSubmit(Model model, ResetPasswordInput resetPasswordInput){
+        boolean result = false;
+
+        try{
+            result = memberService.resetPassword(resetPasswordInput.getId(), resetPasswordInput.getPassword());
+        }catch(Exception e){
+
+        }
+        model.addAttribute("result", result);
+
+        return "member/reset_password_result";
     }
 
     @PostMapping("/member/register")
@@ -37,6 +77,7 @@ public class MemberController {
 
         return "member/register_complete";
     }
+
 
     @GetMapping("/member/email-auth")
     public String registerAuth(
@@ -51,7 +92,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/info")
-    public String memberInfo(){
+    public String memberInfo() {
         return "member/info";
     }
 }
