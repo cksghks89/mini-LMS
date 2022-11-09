@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+
+    </style>
+</head>
+<body>
+<h1>관리자 회원 관리 - 회원 상세 정보</h1>
+
+<div>
+    <a href="/admin/main.do">관리자 홈</a>
+    |
+    <a href="/admin/member/list.do">회원 목록</a>
+    |
+    <a href="#">카테고리 관리</a>
+    |
+    <a href="#">강의 관리</a>
+    |
+    <a href="/member/logout">로그아웃</a>
+    <br/>
+</div>
+
+<div class="detail">
+    <div th:text="${member}"></div>
+</div>
+</body>
+</html>

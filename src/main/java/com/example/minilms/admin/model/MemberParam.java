@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class MemberParam {
+    String userId;
+
     String searchType;
     String searchValue;
 
