@@ -1,14 +1,15 @@
 package com.example.minilms.admin.dto;
 
 import com.example.minilms.member.entity.Member;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class MemberDto {
     String userId;
@@ -31,6 +32,8 @@ public class MemberDto {
     long totalCount;
     long seq;
 
+    String userStatus;
+
     public static MemberDto of(Member member) {
         return MemberDto.builder()
                 .userId(member.getUserId())
@@ -43,6 +46,7 @@ public class MemberDto {
                 .resetPasswordKey(member.getResetPasswordKey())
                 .resetPasswordLimitDt(member.getResetPasswordLimitDt())
                 .adminYn(member.isAdminYn())
+                .userStatus(member.getUserStatus())
                 .build();
     }
 }
