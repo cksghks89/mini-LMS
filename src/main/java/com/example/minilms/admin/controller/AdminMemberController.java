@@ -3,6 +3,7 @@ package com.example.minilms.admin.controller;
 import com.example.minilms.admin.dto.MemberDto;
 import com.example.minilms.admin.model.MemberParam;
 import com.example.minilms.admin.model.MemberStatusInput;
+import com.example.minilms.course.contoller.BaseController;
 import com.example.minilms.member.service.MemberService;
 import com.example.minilms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class AdminMemberController {
+public class AdminMemberController extends BaseController {
     private final MemberService memberService;
 
     @GetMapping("/admin/member/list.do")
@@ -24,7 +25,6 @@ public class AdminMemberController {
         parameter.init();
 
         List<MemberDto> members = memberService.list(parameter);
-        model.addAttribute("list", members);
 
         long totalCount = 0;
         if (members != null && members.size() > 0) {
@@ -32,10 +32,15 @@ public class AdminMemberController {
         }
         String queryString = parameter.getQueryString();
 
-        PageUtil pageUtil = new PageUtil(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
+        String pagerHtml = getPagerHtml(totalCount,
+                parameter.getPageSize(),
+                parameter.getPageIndex(),
+                parameter.getQueryString()
+        );
 
+        model.addAttribute("list", members);
         model.addAttribute("totalCount", totalCount);
-        model.addAttribute("pager", pageUtil.pager());
+        model.addAttribute("pager", pagerHtml);
 
         return "admin/member/list";
     }
