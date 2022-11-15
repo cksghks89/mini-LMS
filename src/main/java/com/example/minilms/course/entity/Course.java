@@ -3,6 +3,7 @@ package com.example.minilms.course.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,6 +17,8 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    long categoryId;
+
     String imagePath;
     String keyword;
     String subject;
@@ -27,7 +30,7 @@ public class Course {
     String contents;
     long price;
     long salePrice;
-    LocalDateTime saleEndDt;
+    LocalDate saleEndDt;
 
     LocalDateTime regDt;    // 등록일
     LocalDateTime udtDt;    // 수정일
