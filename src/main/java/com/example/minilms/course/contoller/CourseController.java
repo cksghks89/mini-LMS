@@ -38,4 +38,11 @@ public class CourseController {
 
         return "course/index";
     }
+
+    @GetMapping("/course/{id}")
+    public String courseDetail(Model model, CourseParam courseParam) {
+        CourseDto courseDto = courseService.frontDetail(courseParam.getId());
+        model.addAttribute("detail", courseDto);
+        return "course/detail";
+    }
 }
