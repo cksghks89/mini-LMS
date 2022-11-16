@@ -2,6 +2,7 @@ package com.example.minilms.admin.service;
 
 import com.example.minilms.admin.dto.CategoryDto;
 import com.example.minilms.admin.model.CategoryInput;
+import com.example.minilms.course.model.CourseParam;
 
 import java.util.List;
 
@@ -23,4 +24,9 @@ public interface CategoryService {
      * 카테고리 삭제
      */
     boolean delete(long id);
+
+    /**
+     * 프론트 카테고리 정보
+     */
+    List<CategoryDto> frontList(CategoryDto parameter);
 }

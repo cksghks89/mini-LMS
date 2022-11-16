@@ -19,4 +19,9 @@ public interface CourseService {
      * 강좌 내용 삭제
      */
     boolean delete(String idList);
+
+    /**
+     * 프론트 강좌 목록
+     */
+    List<CourseDto> frontList(CourseParam parameter);
 }

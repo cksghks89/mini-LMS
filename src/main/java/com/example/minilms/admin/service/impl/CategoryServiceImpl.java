@@ -2,6 +2,7 @@ package com.example.minilms.admin.service.impl;
 
 import com.example.minilms.admin.dto.CategoryDto;
 import com.example.minilms.admin.entity.Category;
+import com.example.minilms.admin.mapper.CategoryMapper;
 import com.example.minilms.admin.model.CategoryInput;
 import com.example.minilms.admin.repository.CategoryRepository;
 import com.example.minilms.admin.service.CategoryService;
@@ -16,7 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private Sort getSortBySortValueDesc(){
+    private final CategoryMapper categoryMapper;
+
+    private Sort getSortBySortValueDesc() {
         return Sort.by(Sort.Direction.DESC, "sortValue");
     }
 
@@ -42,13 +45,13 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean update(CategoryInput parameter) {
         Optional<Category> categoryOptional = categoryRepository.findById(parameter.getId());
-        if(categoryOptional.isPresent()){
+        if (categoryOptional.isPresent()) {
             Category category = categoryOptional.get();
             category.setCategoryName(parameter.getCategoryName());
             category.setSortValue(parameter.getSortValue());
             category.setUsingYn(parameter.isUsingYn());
             categoryRepository.save(category);
-        }else{
+        } else {
             return false;
         }
         return true;
@@ -58,5 +61,10 @@ public class CategoryServiceImpl implements CategoryService {
     public boolean delete(long id) {
         categoryRepository.deleteById(id);
         return true;
+    }
+
+    @Override
+    public List<CategoryDto> frontList(CategoryDto parameter) {
+        return categoryMapper.selectList(parameter);
     }
 }
