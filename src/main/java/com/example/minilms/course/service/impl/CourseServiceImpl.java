@@ -6,6 +6,7 @@ import com.example.minilms.course.entity.TakeCourse;
 import com.example.minilms.course.mapper.CourseMapper;
 import com.example.minilms.course.model.CourseInput;
 import com.example.minilms.course.model.CourseParam;
+import com.example.minilms.course.model.ServiceResult;
 import com.example.minilms.course.model.TakeCourseInput;
 import com.example.minilms.course.repository.CourseRepository;
 import com.example.minilms.course.repository.TakeCourseRepository;
@@ -145,12 +146,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public boolean req(TakeCourseInput takeCourseInput) {
+    public ServiceResult req(TakeCourseInput takeCourseInput) {
         // takeCourseInput : 이메일, 강좌정보(id값)
-
         Optional<Course> optionalCourse = courseRepository.findById(takeCourseInput.getCourseId());
         if(!optionalCourse.isPresent()){
-            return false;
+            return ServiceResult.builder()
+                    .result(false)
+                    .message("강좌 정보가 존재하지 않습니다.")
+                    .build();
         }
 
         Course course = optionalCourse.get();
@@ -159,7 +162,10 @@ public class CourseServiceImpl implements CourseService {
         long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId(),
                 takeCourseInput.getUserId(), List.of(TakeCourseCode.REQ, TakeCourseCode.COMPLETE));
         if(count > 0){
-            return false;
+            return ServiceResult.builder()
+                    .result(false)
+                    .message("이미 신청한 강좌 정보가 존재합니다.")
+                    .build();
         }
 
         TakeCourse takeCourse = TakeCourse.builder()
@@ -171,6 +177,9 @@ public class CourseServiceImpl implements CourseService {
                 .build();
         takeCourseRepository.save(takeCourse);
 
-        return true;
+        return ServiceResult.builder()
+                .result(true)
+                .message("수강신청에 성공하였습니다.")
+                .build();
     }
 }

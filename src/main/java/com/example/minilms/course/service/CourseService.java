@@ -3,6 +3,7 @@ package com.example.minilms.course.service;
 import com.example.minilms.course.dto.CourseDto;
 import com.example.minilms.course.model.CourseInput;
 import com.example.minilms.course.model.CourseParam;
+import com.example.minilms.course.model.ServiceResult;
 import com.example.minilms.course.model.TakeCourseInput;
 
 import java.util.List;
@@ -34,5 +35,5 @@ public interface CourseService {
     /**
      * 수강신청 request 요청
      */
-    boolean req(TakeCourseInput takeCourseInput);
+    ServiceResult req(TakeCourseInput takeCourseInput);
 }

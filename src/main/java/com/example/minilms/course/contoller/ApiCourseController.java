@@ -1,5 +1,7 @@
 package com.example.minilms.course.contoller;
 
+import com.example.minilms.common.model.ResponseResult;
+import com.example.minilms.course.model.ServiceResult;
 import com.example.minilms.course.model.TakeCourseInput;
 import com.example.minilms.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +24,13 @@ public class ApiCourseController {
             Principal principal){
         takeCourseInput.setUserId(principal.getName());
 
-        boolean result = courseService.req(takeCourseInput);
-        if(!result){
-            return ResponseEntity.badRequest().body("수강신청에 실패하였습니다.");
+        ServiceResult result = courseService.req(takeCourseInput);
+        if(!result.isResult()){
+            ResponseResult responseResult = new ResponseResult(false, result.getMessage());
+            return ResponseEntity.ok().body(responseResult);
         }
 
-        return ResponseEntity.ok().body(takeCourseInput);
+        ResponseResult responseResult = new ResponseResult(true);
+        return ResponseEntity.ok().body(responseResult);
     }
 }
