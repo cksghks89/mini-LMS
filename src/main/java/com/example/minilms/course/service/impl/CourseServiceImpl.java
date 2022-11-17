@@ -2,11 +2,15 @@ package com.example.minilms.course.service.impl;
 
 import com.example.minilms.course.dto.CourseDto;
 import com.example.minilms.course.entity.Course;
+import com.example.minilms.course.entity.TakeCourse;
 import com.example.minilms.course.mapper.CourseMapper;
 import com.example.minilms.course.model.CourseInput;
 import com.example.minilms.course.model.CourseParam;
+import com.example.minilms.course.model.TakeCourseInput;
 import com.example.minilms.course.repository.CourseRepository;
+import com.example.minilms.course.repository.TakeCourseRepository;
 import com.example.minilms.course.service.CourseService;
+import com.example.minilms.course.type.TakeCourseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +26,7 @@ import java.util.Optional;
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final TakeCourseRepository takeCourseRepository;
 
     private LocalDate getLocalDate(String value){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -137,5 +142,35 @@ public class CourseServiceImpl implements CourseService {
     public CourseDto frontDetail(long id) {
         Optional<Course> optionalCourse = courseRepository.findById(id);
         return optionalCourse.map(CourseDto::of).orElse(null);
+    }
+
+    @Override
+    public boolean req(TakeCourseInput takeCourseInput) {
+        // takeCourseInput : 이메일, 강좌정보(id값)
+
+        Optional<Course> optionalCourse = courseRepository.findById(takeCourseInput.getCourseId());
+        if(!optionalCourse.isPresent()){
+            return false;
+        }
+
+        Course course = optionalCourse.get();
+
+        // 신청 정보가 있는지 확인 (validation)
+        long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId(),
+                takeCourseInput.getUserId(), List.of(TakeCourseCode.REQ, TakeCourseCode.COMPLETE));
+        if(count > 0){
+            return false;
+        }
+
+        TakeCourse takeCourse = TakeCourse.builder()
+                .courseId(course.getId())
+                .userId(takeCourseInput.getUserId())
+                .payPrice(course.getSalePrice())
+                .regDt(LocalDateTime.now())
+                .status(TakeCourseCode.REQ)
+                .build();
+        takeCourseRepository.save(takeCourse);
+
+        return true;
     }
 }
