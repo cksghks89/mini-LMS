@@ -36,6 +36,10 @@ public class MemberDto {
 
     String userStatus;
 
+    private String zipcode;
+    private String addr;
+    private String addrDetail;
+
     public String getRegDtText(){
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         return regDt != null ? regDt.format(dateTimeFormatter) : "";
@@ -60,6 +64,10 @@ public class MemberDto {
                 .adminYn(member.isAdminYn())
                 .userStatus(member.getUserStatus())
                 .updateDt(member.getUpdateDt())
+
+                .zipcode(member.getZipcode())
+                .addr(member.getAddr())
+                .addrDetail(member.getAddrDetail())
                 .build();
     }
 }

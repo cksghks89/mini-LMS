@@ -15,4 +15,8 @@ public class MemberInput {
     private String phoneNumber;
 
     private String newPassword;
+
+    private String zipcode;
+    private String addr;
+    private String addrDetail;
 }
