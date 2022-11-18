@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 정보</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .list table th, .list table td {
+            border: solid 1px #000;
+        }
+    </style>
 </head>
 <body>
 <h1>회원 정보</h1>
@@ -16,6 +26,42 @@
     |
     <a href="/member/takecourse">내 수강목록</a>
     <hr/>
+</div>
+
+<div class="list">
+    <table>
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>등록일</th>
+            <th>강좌명</th>
+            <th>상태</th>
+            <th>비고</th>
+        </tr>
+        </thead>
+        <tbody id="detailList">
+        <tr th:each="x, i : ${list}">
+            <td th:text="${i.index + 1}"></td>
+            <td>
+                <p th:text="${x.getRegDtText()}">Y</p>
+            </td>
+            <td>
+                <p th:text="${x.subject}">강좌명</p>
+            </td>
+            <td>
+                <p th:if="${#strings.equals(x.status, 'REQ')}">수강신청</p>
+                <p th:if="${#strings.equals(x.status, 'COMPLETE')}">결재완료</p>
+                <p th:if="${#strings.equals(x.status, 'CANCEL')}">수강취소</p>
+            </td>
+            <td>
+                <p class="row-buttons" th:if="${#strings.equals(x.status, 'REQ')}">
+                    <input type="hidden" name="id" th:value="${x.id}">
+                    <button value="CANCEL" type="button">수강취소 처리</button>
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 </body>

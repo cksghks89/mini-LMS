@@ -52,4 +52,11 @@ public class TakeCourseServiceImpl implements TakeCourseService {
 
         return new ServiceResult(true);
     }
+
+    @Override
+    public List<TakeCourseDto> myCourse(String userId) {
+        TakeCourseParam parameter = new TakeCourseParam();
+        parameter.setUserId(userId);
+        return takeCourseMapper.selectListMyCourse(parameter);
+    }
 }

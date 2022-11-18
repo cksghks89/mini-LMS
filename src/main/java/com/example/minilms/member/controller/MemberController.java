@@ -1,7 +1,9 @@
 package com.example.minilms.member.controller;
 
 import com.example.minilms.admin.dto.MemberDto;
+import com.example.minilms.course.dto.TakeCourseDto;
 import com.example.minilms.course.model.ServiceResult;
+import com.example.minilms.course.service.TakeCourseService;
 import com.example.minilms.member.entity.Member;
 import com.example.minilms.member.model.MemberInput;
 import com.example.minilms.member.model.ResetPasswordInput;
@@ -16,11 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
 public class MemberController {
     private final MemberService memberService;
+    private final TakeCourseService takeCourseService;
 
     @RequestMapping("/member/login")
     public String login() {
@@ -141,7 +145,12 @@ public class MemberController {
     }
 
     @GetMapping("/member/takecourse")
-    public String takeCourse() {
+    public String memberTakeCourse(Model model, Principal principal) {
+        String userId = principal.getName();
+        List<TakeCourseDto> list = takeCourseService.myCourse(userId);
+
+        model.addAttribute("list", list);
+
         return "member/takecourse";
     }
 }

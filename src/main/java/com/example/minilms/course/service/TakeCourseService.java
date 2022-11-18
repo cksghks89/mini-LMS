@@ -14,4 +14,9 @@ public interface TakeCourseService {
      * 수강신청 상태변경
      */
     ServiceResult updateStatus(long id, TakeCourseCode status);
+
+    /**
+     * 회원 수강 내역 목록
+     */
+    List<TakeCourseDto> myCourse(String userId);
 }

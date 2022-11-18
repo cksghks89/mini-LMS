@@ -28,4 +28,17 @@
         order by reg_dt desc
         limit #{pageStart}, #{pageEnd}
     </select>
+
+    <select id="selectListMyCourse" resultType="com.example.minilms.course.dto.TakeCourseDto">
+        select tc.*
+             , c.subject
+        from take_course tc
+                 join course c on tc.course_id = c.id
+                 join member m on tc.user_id = m.user_id
+        where tc.user_id = #{userId}
+        order by reg_dt desc
+            limit #{pageStart}, #{pageEnd}
+    </select>
+
+
 </mapper>
