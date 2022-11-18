@@ -182,4 +182,10 @@ public class CourseServiceImpl implements CourseService {
                 .message("수강신청에 성공하였습니다.")
                 .build();
     }
+
+    @Override
+    public List<CourseDto> listAll() {
+        List<Course> courseList = courseRepository.findAll();
+        return CourseDto.of(courseList);
+    }
 }

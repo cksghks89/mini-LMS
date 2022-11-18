@@ -48,12 +48,22 @@
             /*right: 0;*/
             text-align: right;
         }
+        p.nothing {
+            text-align: center;
+            padding: 100px;
+        }
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
+            $('#searchCourseId').on('change', function(){
+                const id = $(this).val();
+
+                location.href = '?searchCourseId=' + id;
+            })
+
             $('.row-buttons button').on('click', function () {
                 const status = $(this).val();
                 const id = $(this).closest('div').find('input[name=id]').val();
@@ -78,6 +88,13 @@
 
 <div class="list">
     <div class="buttons">
+        <select id="searchCourseId">
+            <option value="">전체 강좌</option>
+            <option th:each="x : ${courseList}"
+                    th:selected="${#strings.equals(param.searchCourseId, x.id)}"
+                    th:value="${x.id}" th:text="${x.subject}"></option>
+        </select>
+
         <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>
     </div>
 
@@ -125,10 +142,15 @@
                 </p>
             </td>
         </tr>
+        <tr th:if="${#lists.size(list) < 1}">
+            <td colspan="8">
+                <p class="nothing">내용이 없습니다.</p>
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>
-<div class="pager" th:utext="${pager}"></div>
+<div class="pager" th:if="${#lists.size(list) > 0}" th:utext="${pager}"></div>
 
 <form id="procForm" method="post" action="/admin/takecourse/status.do">
     <input type="hidden" name="id">
