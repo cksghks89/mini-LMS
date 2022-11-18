@@ -19,4 +19,11 @@ public interface TakeCourseService {
      * 회원 수강 내역 목록
      */
     List<TakeCourseDto> myCourse(String userId);
+
+    TakeCourseDto detail(long id);
+
+    /**
+     * 수강신청 취소 처리
+     */
+    ServiceResult cancel(long id);
 }

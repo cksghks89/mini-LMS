@@ -13,6 +13,46 @@
             border: solid 1px #000;
         }
     </style>
+
+<!--    axios 가 jquery 보다 위쪽에 script 가 위치해야 정상 동작-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('.row-buttons button').on('click', function () {
+                const id = $(this).closest('div').find('input[name=id]').val();
+
+                const msg = '수강취소 처리 하시겠습니까?';
+                if(!confirm(msg)){
+                    return false;
+                }
+
+                const url = '/api/member/course/cancel.api';
+                const parameter = {
+                    takeCourseId: id
+                };
+
+                axios.post(url, parameter).then(function (response) {
+
+                    response.data = response.data || {};
+                    response.data.header = response.data.header || {};
+
+                    if(!response.data.header.result){
+                        alert(response.data.header.message);
+                        return false;
+                    }
+
+                    alert(' 강좌가 정상적으로 취소되었습니다. ');
+                    location.reload();
+
+                }).catch(function (err) {
+                    console.log(err);
+                });
+                return false;
+            })
+        })
+    </script>
 </head>
 <body>
 <h1>회원 정보</h1>
@@ -56,7 +96,7 @@
             <td>
                 <p class="row-buttons" th:if="${#strings.equals(x.status, 'REQ')}">
                     <input type="hidden" name="id" th:value="${x.id}">
-                    <button value="CANCEL" type="button">수강취소 처리</button>
+                    <button type="button">수강취소 처리</button>
                 </p>
             </td>
         </tr>

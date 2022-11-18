@@ -59,4 +59,29 @@ public class TakeCourseServiceImpl implements TakeCourseService {
         parameter.setUserId(userId);
         return takeCourseMapper.selectListMyCourse(parameter);
     }
+
+    @Override
+    public TakeCourseDto detail(long id) {
+        Optional<TakeCourse> optionalTakeCourse = takeCourseRepository.findById(id);
+        if(optionalTakeCourse.isPresent()){
+            return TakeCourseDto.of(optionalTakeCourse.get());
+        }
+        return null;
+    }
+
+    @Override
+    public ServiceResult cancel(long id) {
+        Optional<TakeCourse> optionalTakeCourse = takeCourseRepository.findById(id);
+        if(!optionalTakeCourse.isPresent()){
+            return new ServiceResult(false, "수강정보가 존재하지 않습니다.");
+        }
+
+        TakeCourse takeCourse = optionalTakeCourse.get();
+
+        takeCourse.setStatus(TakeCourseCode.CANCEL);
+        takeCourseRepository.save(takeCourse);
+
+
+        return new ServiceResult(true);
+    }
 }

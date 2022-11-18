@@ -33,4 +33,5 @@ public class ApiCourseController {
         ResponseResult responseResult = new ResponseResult(true);
         return ResponseEntity.ok().body(responseResult);
     }
+
 }
