@@ -4,6 +4,7 @@ import com.example.minilms.admin.dto.MemberDto;
 import com.example.minilms.admin.mapper.MemberMapper;
 import com.example.minilms.admin.model.MemberParam;
 import com.example.minilms.components.MailComponents;
+import com.example.minilms.course.model.ServiceResult;
 import com.example.minilms.member.entity.Member;
 import com.example.minilms.member.entity.MemberCode;
 import com.example.minilms.member.exception.MemberNotEmailAuthException;
@@ -257,5 +258,26 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
+    }
+
+    @Override
+    public ServiceResult updateMemberPassword(MemberInput parameter) {
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(!optionalMember.isPresent()){
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+
+        if(!BCrypt.checkpw(parameter.getPassword(), member.getPassword())){
+            return new ServiceResult(false, "비밀번호가 일치하지 않습니다.");
+        }
+
+        String encPassword = BCrypt.hashpw(parameter.getNewPassword(), BCrypt.gensalt());
+        member.setPassword(encPassword);
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
     }
 }

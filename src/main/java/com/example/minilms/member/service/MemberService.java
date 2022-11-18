@@ -2,6 +2,7 @@ package com.example.minilms.member.service;
 
 import com.example.minilms.admin.dto.MemberDto;
 import com.example.minilms.admin.model.MemberParam;
+import com.example.minilms.course.model.ServiceResult;
 import com.example.minilms.member.entity.Member;
 import com.example.minilms.member.model.MemberInput;
 import com.example.minilms.member.model.ResetPasswordInput;
@@ -54,4 +55,9 @@ public interface MemberService extends UserDetailsService{
      * 회원 비밀번호 초기화
      */
     boolean updatePassword(String userId, String password);
+
+    /**
+     * 회원 정보 수정 - 비밀번호 초기화
+     */
+    ServiceResult updateMemberPassword(MemberInput parameter);
 }

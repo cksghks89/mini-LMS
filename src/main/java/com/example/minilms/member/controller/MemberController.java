@@ -1,5 +1,7 @@
 package com.example.minilms.member.controller;
 
+import com.example.minilms.admin.dto.MemberDto;
+import com.example.minilms.course.model.ServiceResult;
 import com.example.minilms.member.entity.Member;
 import com.example.minilms.member.model.MemberInput;
 import com.example.minilms.member.model.ResetPasswordInput;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -55,12 +58,12 @@ public class MemberController {
     }
 
     @PostMapping("/member/reset/password")
-    public String resetPasswordSubmit(Model model, ResetPasswordInput resetPasswordInput){
+    public String resetPasswordSubmit(Model model, ResetPasswordInput resetPasswordInput) {
         boolean result = false;
 
-        try{
+        try {
             result = memberService.resetPassword(resetPasswordInput.getId(), resetPasswordInput.getPassword());
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
         model.addAttribute("result", result);
@@ -92,7 +95,38 @@ public class MemberController {
     }
 
     @GetMapping("/member/info")
-    public String memberInfo() {
+    public String memberInfo(Model model, Principal principal) {
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+
+        model.addAttribute("detail", detail);
+
         return "member/info";
+    }
+
+    @GetMapping("/member/password")
+    public String memberPassword() {
+        return "member/password";
+    }
+
+    @PostMapping("/member/password")
+    public String memberPasswordSubmit(Model model,
+                                       MemberInput memberInput,
+                                       Principal principal) {
+
+        String userId = principal.getName();
+        memberInput.setUserId(userId);
+        ServiceResult serviceResult = memberService.updateMemberPassword(memberInput);
+        if(!serviceResult.isResult()){
+            model.addAttribute("message", serviceResult.getMessage());
+            return "common/error";
+        }
+
+        return "redirect:/member/info";
+    }
+
+    @GetMapping("/member/takecourse")
+    public String takeCourse() {
+        return "member/takecourse";
     }
 }
