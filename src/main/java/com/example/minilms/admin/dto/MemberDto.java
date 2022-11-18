@@ -4,6 +4,7 @@ import com.example.minilms.member.entity.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Getter
@@ -18,6 +19,7 @@ public class MemberDto {
     String password;
 
     LocalDateTime regDt;
+    LocalDateTime updateDt;
 
     boolean emailAuthYn;
     String emailAuthKey;
@@ -34,6 +36,16 @@ public class MemberDto {
 
     String userStatus;
 
+    public String getRegDtText(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return regDt != null ? regDt.format(dateTimeFormatter) : "";
+    }
+
+    public String getUpdateDt(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return updateDt != null ? updateDt.format(dateTimeFormatter) : "";
+    }
+
     public static MemberDto of(Member member) {
         return MemberDto.builder()
                 .userId(member.getUserId())
@@ -47,6 +59,7 @@ public class MemberDto {
                 .resetPasswordLimitDt(member.getResetPasswordLimitDt())
                 .adminYn(member.isAdminYn())
                 .userStatus(member.getUserStatus())
+                .updateDt(member.getUpdateDt())
                 .build();
     }
 }

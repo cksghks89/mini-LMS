@@ -280,4 +280,21 @@ public class MemberServiceImpl implements MemberService {
 
         return new ServiceResult(true);
     }
+
+    @Override
+    public ServiceResult updateMember(MemberInput parameter) {
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(!optionalMember.isPresent()){
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+
+        member.setPhoneNumber(parameter.getPhoneNumber());
+        member.setUpdateDt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+    }
 }

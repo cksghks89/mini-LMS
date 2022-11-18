@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 정보</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            $("#updateForm").on('submit', function () {
+                if (!confirm('회원 정보를 수정 하시겠습니까?')) {
+                    return false;
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <h1>회원 정보</h1>
@@ -16,6 +27,48 @@
     |
     <a href="/member/takecourse">내 수강목록</a>
     <hr/>
+</div>
+
+<div>
+    <form id="updateForm" method="post">
+        <table>
+            <tbody>
+            <tr>
+                <th>아이디(이메일)</th>
+                <td>
+                    <p th:text="${detail.userId}">아이디</p>
+                </td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td>
+                    <p th:text="${detail.userName}">이름</p>
+                </td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td>
+                    <input type="text" name="phoneNumber" th:value="${detail.phoneNumber}">
+                </td>
+            </tr>
+            <tr>
+                <th>가입일</th>
+                <td>
+                    <p th:text="${detail.getRegDtText()}"></p>
+                </td>
+            </tr>
+            <tr>
+                <th>회원정보 수정일</th>
+                <td>
+                    <p th:text="${detail.getUpdateDt()}"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <button type="submit">수정</button>
+        </div>
+    </form>
 </div>
 
 </body>
