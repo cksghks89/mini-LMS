@@ -64,6 +64,7 @@ public class MemberDto {
                 .adminYn(member.isAdminYn())
                 .userStatus(member.getUserStatus())
                 .updateDt(member.getUpdateDt())
+                .password(member.getPassword())
 
                 .zipcode(member.getZipcode())
                 .addr(member.getAddr())

@@ -65,4 +65,9 @@ public interface MemberService extends UserDetailsService{
      * 회원 정보 수정
      */
     ServiceResult updateMember(MemberInput parameter);
+
+    /**
+     * 회원 탈퇴 로직
+     */
+    ServiceResult withdraw(String userId);
 }

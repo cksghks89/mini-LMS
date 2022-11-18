@@ -5,7 +5,6 @@ import com.example.minilms.course.dto.TakeCourseDto;
 import com.example.minilms.course.model.ServiceResult;
 import com.example.minilms.course.model.TakeCourseInput;
 import com.example.minilms.course.service.TakeCourseService;
-import com.example.minilms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;

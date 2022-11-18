@@ -13,6 +13,7 @@ import com.example.minilms.member.model.MemberInput;
 import com.example.minilms.member.model.ResetPasswordInput;
 import com.example.minilms.member.repository.MemberRepository;
 import com.example.minilms.member.service.MemberService;
+import com.example.minilms.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -246,6 +247,10 @@ public class MemberServiceImpl implements MemberService {
         if(Member.MEMBER_STATUS_STOP.equals(member.getUserStatus())){
             throw new MemberStopUserException("정지된 회원입니다.");
         }
+        if(Member.MEMBER_STATUS_WITHDRAW.equals(member.getUserStatus())){
+            throw new MemberStopUserException("탈퇴된 회원 입니다.");
+        }
+
         if (!member.isEmailAuthYn()) {
             throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해 주세요.");
         }
@@ -270,11 +275,11 @@ public class MemberServiceImpl implements MemberService {
         }
         Member member = optionalMember.get();
 
-        if(!BCrypt.checkpw(parameter.getPassword(), member.getPassword())){
+        if(!PasswordUtils.equals(parameter.getPassword(), member.getPassword())){
             return new ServiceResult(false, "비밀번호가 일치하지 않습니다.");
         }
 
-        String encPassword = BCrypt.hashpw(parameter.getNewPassword(), BCrypt.gensalt());
+        String encPassword = PasswordUtils.encryptPassword(parameter.getNewPassword());
         member.setPassword(encPassword);
         memberRepository.save(member);
 
@@ -296,6 +301,36 @@ public class MemberServiceImpl implements MemberService {
         member.setZipcode(parameter.getZipcode());
         member.setAddr(parameter.getAddr());
         member.setAddrDetail(parameter.getAddrDetail());
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+    }
+
+    @Override
+    public ServiceResult withdraw(String userId) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(!optionalMember.isPresent()){
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        member.setUserName("삭제회원");
+        member.setPhoneNumber("");
+        member.setPassword("");
+        member.setRegDt(null);
+        member.setUpdateDt(null);
+        member.setEmailAuthYn(false);
+        member.setEmailAuthDt(null);
+        member.setEmailAuthKey("");
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        member.setUserStatus(MemberCode.MEMBER_STATUS_WITHDRAW);
+
+        member.setZipcode("");
+        member.setAddr("");
+        member.setAddrDetail("");
+
         memberRepository.save(member);
 
         return new ServiceResult(true);

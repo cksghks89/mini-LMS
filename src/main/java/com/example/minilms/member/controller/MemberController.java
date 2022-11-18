@@ -9,6 +9,7 @@ import com.example.minilms.member.model.MemberInput;
 import com.example.minilms.member.model.ResetPasswordInput;
 import com.example.minilms.member.repository.MemberRepository;
 import com.example.minilms.member.service.MemberService;
+import com.example.minilms.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -115,7 +116,7 @@ public class MemberController {
         memberInput.setUserId(userId);
 
         ServiceResult serviceResult = memberService.updateMember(memberInput);
-        if(!serviceResult.isResult()){
+        if (!serviceResult.isResult()) {
             model.addAttribute("message", serviceResult.getMessage());
             return "common/error";
         }
@@ -136,7 +137,7 @@ public class MemberController {
         String userId = principal.getName();
         memberInput.setUserId(userId);
         ServiceResult serviceResult = memberService.updateMemberPassword(memberInput);
-        if(!serviceResult.isResult()){
+        if (!serviceResult.isResult()) {
             model.addAttribute("message", serviceResult.getMessage());
             return "common/error";
         }
@@ -154,4 +155,28 @@ public class MemberController {
         return "member/takecourse";
     }
 
+    @GetMapping("/member/withdraw")
+    public String memberWithdraw(Model model) {
+        return "member/withdraw";
+    }
+
+    @PostMapping("/member/withdraw")
+    public String memberWithdrawSubmit(Model model
+            , MemberInput parameter
+            , Principal principal) {
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+
+        if(!PasswordUtils.equals(parameter.getPassword(), detail.getPassword())){
+            model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
+            return "common/error";
+        }
+        ServiceResult result = memberService.withdraw(userId);
+        if(!result.isResult()){
+            model.addAttribute("message", result.getMessage());
+            return "common/error";
+        }
+
+        return "redirect:/member/logout";
+    }
 }
