@@ -3,6 +3,7 @@ package com.example.minilms.admin.service.impl;
 import com.example.minilms.admin.dto.BannerDto;
 import com.example.minilms.admin.mapper.BannerMapper;
 import com.example.minilms.admin.model.BannerParam;
+import com.example.minilms.admin.repository.BannerRepository;
 import com.example.minilms.admin.service.BannerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BannerServiceImpl implements BannerService {
     private final BannerMapper bannerMapper;
+    private final BannerRepository bannerRepository;
+
     @Override
     public List<BannerDto> list(BannerParam parameter) {
         long totalCount = bannerMapper.selectListCount(parameter);
@@ -27,5 +30,11 @@ public class BannerServiceImpl implements BannerService {
             }
         }
         return list;
+    }
+
+    @Override
+    public BannerDto getById(long id) {
+        return bannerRepository.findById(id)
+                .map(BannerDto::of).orElse(null);
     }
 }

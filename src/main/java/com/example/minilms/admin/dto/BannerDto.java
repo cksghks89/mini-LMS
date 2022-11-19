@@ -1,5 +1,6 @@
 package com.example.minilms.admin.dto;
 
+import com.example.minilms.admin.entity.Banner;
 import lombok.*;
 
 @Getter
@@ -16,7 +17,7 @@ public class BannerDto {
     long sortValue;
     boolean isPublic;
     String alterText;
-    boolean isTargetBlank;
+    String openMethod;
 
     // 파일 저장
     String fileName;
@@ -25,4 +26,18 @@ public class BannerDto {
     // 페이징 처리
     long totalCount;
     long seq;
+
+    public static BannerDto of(Banner banner){
+        return BannerDto.builder()
+                .id(banner.getId())
+                .bannerId(banner.getBannerId())
+                .linkPath(banner.getLinkPath())
+                .sortValue(banner.getSortValue())
+                .isPublic(banner.isPublic())
+                .alterText(banner.getAlterText())
+                .openMethod(banner.getOpenMethod())
+                .fileName(banner.getFileName())
+                .urlFileName(banner.getUrlFileName())
+                .build();
+    }
 }

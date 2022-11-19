@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface BannerService {
     List<BannerDto> list(BannerParam parameter);
+
+    BannerDto getById(long id);
 }
