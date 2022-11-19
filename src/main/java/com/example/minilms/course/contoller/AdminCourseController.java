@@ -86,7 +86,7 @@ public class AdminCourseController extends BaseController {
         String saveFileName = "";
         String urlFileName = "";
 
-        if (file != null) {
+        if (file.isEmpty()) {
             String originalFileName = file.getOriginalFilename();
             String baseLocalPath = "C:\\Users\\songkey2\\Documents\\Zero-base\\zerobase_practice_Project\\miniLMS\\files";
             String baseUrlPath = "/files";

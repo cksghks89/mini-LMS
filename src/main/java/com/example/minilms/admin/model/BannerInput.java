@@ -8,13 +8,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BannerInput{
-    long id;
+    Long id;
 
     String bannerId;
     String linkPath;
     String openMethod;
     long sortValue;
-    boolean isPublic;
+    String isPublic;
+    String alterText;
 
     // ADD
     String fileName;

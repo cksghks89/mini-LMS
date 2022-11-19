@@ -73,9 +73,15 @@
                 </td>
             </tr>
             <tr>
+                <th>대체 텍스트</th>
+                <td>
+                    <input th:value="${detail.alterText}" type="text" name="alterText" placeholder="대체 텍스트 입력" required>
+                </td>
+            </tr>
+            <tr>
                 <th>공개 여부</th>
                 <td>
-                    <label><input type="checkbox" name="isPublic" value="true"> 공개</label>
+                    <label><input th:checked="${detail.isPublic()}" type="checkbox" name="isPublic" value="true"> 공개</label>
                 </td>
             </tr>
             </tbody>

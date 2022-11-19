@@ -3,13 +3,16 @@ package com.example.minilms.admin.dto;
 import com.example.minilms.admin.entity.Banner;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class BannerDto {
-    long id;
+    Long id;
 
     String bannerId;
 
@@ -23,9 +26,16 @@ public class BannerDto {
     String fileName;
     String urlFileName;
 
+    LocalDateTime regDt;
+
     // 페이징 처리
     long totalCount;
     long seq;
+
+    public String getRegDtText(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return regDt != null ? regDt.format(dateTimeFormatter) : "";
+    }
 
     public static BannerDto of(Banner banner){
         return BannerDto.builder()
@@ -38,6 +48,7 @@ public class BannerDto {
                 .openMethod(banner.getOpenMethod())
                 .fileName(banner.getFileName())
                 .urlFileName(banner.getUrlFileName())
+                .regDt(banner.getRegDt())
                 .build();
     }
 }

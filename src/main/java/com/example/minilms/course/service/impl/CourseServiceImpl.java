@@ -92,6 +92,7 @@ public class CourseServiceImpl implements CourseService {
         LocalDate saleEndDt = getLocalDate(parameter.getSaleEndDtText());
 
         Course course = optionalCourse.get();
+
         course.setSubject(parameter.getSubject());
         course.setCategoryId(parameter.getCategoryId());
         course.setUdtDt(LocalDateTime.now());

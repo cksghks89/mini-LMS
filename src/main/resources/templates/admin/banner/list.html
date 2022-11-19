@@ -115,14 +115,14 @@
             <td th:text="${x.id}"></td>
             <td>
                 <p>
-                    <a th:href="'/admin/banner/edit.do?id=' + ${x.id}" th:text="${x.subject}">강좌명</a>
+                    <a th:href="'/admin/banner/edit.do?id=' + ${x.id}" th:text="${x.bannerId}">강좌명</a>
                 </p>
             </td>
             <td>
-                <!--                이미지-->
+                <img th:alt="${x.alterText}" th:src="${x.urlFileName}">
             </td>
             <td>
-                <p th:text="${x.regDt}">Y</p>
+                <p th:text="${x.getRegDtText()}">Y</p>
             </td>
         </tr>
         <tr th:if="${#lists.size(list) eq 0}">
