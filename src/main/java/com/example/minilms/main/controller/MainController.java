@@ -1,35 +1,19 @@
 package com.example.minilms.main.controller;
 
-import com.example.minilms.components.MailComponents;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.util.RequestUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequiredArgsConstructor
 public class MainController {
 
-    private final MailComponents mailComponents;
-
     @RequestMapping("/")
-    public String index() {
-
+    public String index(HttpServletRequest request) {
         return "index";
-    }
-
-    @GetMapping("/sendMailTest")
-    public void sendMailTest(){
-        mailComponents.sendMailTest();
-    }
-
-    @GetMapping("/sendMail")
-    public void sendMail(){
-        String mail = "song960705@naver.com";
-        String subject = "HTML mail Test";
-        String text = "JavaMailSender HTML test Mail";
-
-        mailComponents.sendMail(mail, subject, text);
     }
 
     @RequestMapping("/error/denied")

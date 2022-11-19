@@ -232,40 +232,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Optional<Member> optionalMember = memberRepository.findById(username);
-        if (!optionalMember.isPresent()) {
-            throw new UsernameNotFoundException("회원 정보가 없습니다.");
-        }
-
-        Member member = optionalMember.get();
-
-        if(Member.MEMBER_STATUS_REQ.equals(member.getUserStatus())){
-            throw new MemberNotEmailAuthException("이메일 활성화 후 로그인 해주세요");
-        }
-        if(Member.MEMBER_STATUS_STOP.equals(member.getUserStatus())){
-            throw new MemberStopUserException("정지된 회원입니다.");
-        }
-        if(Member.MEMBER_STATUS_WITHDRAW.equals(member.getUserStatus())){
-            throw new MemberStopUserException("탈퇴된 회원 입니다.");
-        }
-
-        if (!member.isEmailAuthYn()) {
-            throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해 주세요.");
-        }
-
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        if(member.isAdminYn()){
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-
-        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
-    }
-
-    @Override
     public ServiceResult updateMemberPassword(MemberInput parameter) {
         String userId = parameter.getUserId();
 
@@ -335,4 +301,39 @@ public class MemberServiceImpl implements MemberService {
 
         return new ServiceResult(true);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Optional<Member> optionalMember = memberRepository.findById(username);
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("회원 정보가 없습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        if(Member.MEMBER_STATUS_REQ.equals(member.getUserStatus())){
+            throw new MemberNotEmailAuthException("이메일 활성화 후 로그인 해주세요");
+        }
+        if(Member.MEMBER_STATUS_STOP.equals(member.getUserStatus())){
+            throw new MemberStopUserException("정지된 회원입니다.");
+        }
+        if(Member.MEMBER_STATUS_WITHDRAW.equals(member.getUserStatus())){
+            throw new MemberStopUserException("탈퇴된 회원 입니다.");
+        }
+
+        if (!member.isEmailAuthYn()) {
+            throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 해 주세요.");
+        }
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        if(member.isAdminYn()){
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+
+        return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
+    }
+
 }
