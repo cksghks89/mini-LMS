@@ -16,4 +16,6 @@ public interface BannerService {
     boolean set(BannerInput parameter);
 
     boolean add(BannerInput parameter);
+
+    boolean delete(String idList);
 }

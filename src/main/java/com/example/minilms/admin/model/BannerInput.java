@@ -17,6 +17,9 @@ public class BannerInput{
     String isPublic;
     String alterText;
 
+    // 삭제 리스트
+    String idList;
+
     // ADD
     String fileName;
     String urlFileName;

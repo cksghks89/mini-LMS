@@ -5,6 +5,7 @@ import com.example.minilms.admin.model.BannerInput;
 import com.example.minilms.admin.model.BannerParam;
 import com.example.minilms.admin.service.BannerService;
 import com.example.minilms.course.contoller.BaseController;
+import com.example.minilms.course.model.CourseInput;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -155,10 +156,10 @@ public class AdminBannerController extends BaseController {
         return new String[]{newFileName, newUrlFileName};
     }
 
-//    @PostMapping("/admin/course/delete.do")
-//    public String delete(Model model, CourseInput parameter) {
-//        boolean result = courseService.delete(parameter.getIdList());
-//
-//        return "redirect:/admin/course/list.do";
-//    }
+    @PostMapping("/admin/banner/delete.do")
+    public String delete(Model model, BannerInput parameter) {
+        boolean result = bannerService.delete(parameter.getIdList());
+
+        return "redirect:/admin/banner/list.do";
+    }
 }

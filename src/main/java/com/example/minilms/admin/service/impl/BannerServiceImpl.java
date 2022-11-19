@@ -82,4 +82,27 @@ public class BannerServiceImpl implements BannerService {
         bannerRepository.save(banner);
         return true;
     }
+
+    @Override
+    public boolean delete(String idList) {
+        if(idList == null) {
+            return false;
+        }
+        String[] strList = idList.split(",");
+
+        for(String id : strList){
+            long longId = 0L;
+            try{
+                longId = Long.parseLong(id);
+            }catch (Exception e){
+                return false;
+            }
+
+            if(longId > 0){
+                bannerRepository.deleteById(longId);
+            }
+        }
+
+        return true;
+    }
 }
