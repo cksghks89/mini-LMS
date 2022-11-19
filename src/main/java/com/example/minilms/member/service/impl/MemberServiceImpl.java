@@ -303,6 +303,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void updateLoginHistory(String userId){
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(optionalMember.isEmpty()){
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+        member.setLastLoginHistory(LocalDateTime.now());
+
+        memberRepository.save(member);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<Member> optionalMember = memberRepository.findById(username);

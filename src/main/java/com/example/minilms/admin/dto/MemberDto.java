@@ -40,6 +40,8 @@ public class MemberDto {
     private String addr;
     private String addrDetail;
 
+    private LocalDateTime lastLoginHistory;
+
     public String getRegDtText(){
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         return regDt != null ? regDt.format(dateTimeFormatter) : "";
@@ -48,6 +50,11 @@ public class MemberDto {
     public String getUpdateDt(){
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         return updateDt != null ? updateDt.format(dateTimeFormatter) : "";
+    }
+
+    public String getLoginHistoryDtText(){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return lastLoginHistory != null ? lastLoginHistory.format(dateTimeFormatter) : "";
     }
 
     public static MemberDto of(Member member) {
@@ -69,6 +76,8 @@ public class MemberDto {
                 .zipcode(member.getZipcode())
                 .addr(member.getAddr())
                 .addrDetail(member.getAddrDetail())
+
+                .lastLoginHistory(member.getLastLoginHistory())
                 .build();
     }
 }

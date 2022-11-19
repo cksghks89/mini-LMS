@@ -70,4 +70,6 @@ public interface MemberService extends UserDetailsService{
      * 회원 탈퇴 로직
      */
     ServiceResult withdraw(String userId);
+
+    void updateLoginHistory(String userId);
 }

@@ -1,8 +1,10 @@
 package com.example.minilms.admin.controller;
 
+import com.example.minilms.admin.dto.LoginHistoryDto;
 import com.example.minilms.admin.dto.MemberDto;
 import com.example.minilms.admin.model.MemberParam;
 import com.example.minilms.admin.model.MemberStatusInput;
+import com.example.minilms.admin.service.LoginHistoryService;
 import com.example.minilms.course.contoller.BaseController;
 import com.example.minilms.member.service.MemberService;
 import com.example.minilms.util.PageUtil;
@@ -18,10 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminMemberController extends BaseController {
     private final MemberService memberService;
+    private final LoginHistoryService loginHistoryService;
 
     @GetMapping("/admin/member/list.do")
     public String list(Model model, MemberParam parameter) {
-
         parameter.init();
 
         List<MemberDto> members = memberService.list(parameter);
@@ -30,7 +32,6 @@ public class AdminMemberController extends BaseController {
         if (members != null && members.size() > 0) {
             totalCount = members.get(0).getTotalCount();
         }
-        String queryString = parameter.getQueryString();
 
         String pagerHtml = getPagerHtml(totalCount,
                 parameter.getPageSize(),
