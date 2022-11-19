@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +33,15 @@ public class LoginHistoryServiceImpl implements LoginHistoryService {
                 .build());
 
         return true;
+    }
+
+    @Override
+    public List<LoginHistoryDto> history(String userId) {
+        Optional<List<LoginHistory>> allByUserId = loginHistoryRepository.findAllByUserIdOrderByLoginDtDesc(userId);
+        if(allByUserId.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        return LoginHistoryDto.of(allByUserId.get());
     }
 }

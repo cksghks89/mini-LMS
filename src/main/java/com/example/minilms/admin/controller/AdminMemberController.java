@@ -52,7 +52,10 @@ public class AdminMemberController extends BaseController {
         parameter.init();
 
         MemberDto member = memberService.detail(parameter.getUserId());
+        List<LoginHistoryDto> loginHistoryDtoList = loginHistoryService.history(parameter.getUserId());
+
         model.addAttribute("member", member);
+        model.addAttribute("history", loginHistoryDtoList);
 
         return "admin/member/detail";
     }
