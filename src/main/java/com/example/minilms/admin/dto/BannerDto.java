@@ -5,6 +5,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -50,5 +53,12 @@ public class BannerDto {
                 .urlFileName(banner.getUrlFileName())
                 .regDt(banner.getRegDt())
                 .build();
+    }
+
+    public static List<BannerDto> of(List<Banner> bannerList){
+        if(bannerList.isEmpty()){
+            return new ArrayList<>();
+        }
+        return bannerList.stream().map(BannerDto::of).collect(Collectors.toList());
     }
 }

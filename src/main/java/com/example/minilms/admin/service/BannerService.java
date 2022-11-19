@@ -18,4 +18,6 @@ public interface BannerService {
     boolean add(BannerInput parameter);
 
     boolean delete(String idList);
+
+    List<BannerDto> mainList();
 }

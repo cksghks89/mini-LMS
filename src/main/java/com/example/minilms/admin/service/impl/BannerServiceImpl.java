@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +27,9 @@ public class BannerServiceImpl implements BannerService {
     public List<BannerDto> list(BannerParam parameter) {
         long totalCount = bannerMapper.selectListCount(parameter);
         List<BannerDto> list = bannerMapper.selectList(parameter);
-        if(!CollectionUtils.isEmpty(list)){
+        if (!CollectionUtils.isEmpty(list)) {
             int i = 0;
-            for(BannerDto x : list){
+            for (BannerDto x : list) {
                 x.setTotalCount(totalCount);
                 x.setSeq(totalCount - parameter.getPageStart() - i);
                 i++;
@@ -45,7 +47,7 @@ public class BannerServiceImpl implements BannerService {
     @Override
     public boolean set(BannerInput parameter) {
         Optional<Banner> optionalBanner = bannerRepository.findById(parameter.getId());
-        if(optionalBanner.isEmpty()){
+        if (optionalBanner.isEmpty()) {
             return false;
         }
 
@@ -85,24 +87,37 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     public boolean delete(String idList) {
-        if(idList == null) {
+        if (idList == null) {
             return false;
         }
         String[] strList = idList.split(",");
 
-        for(String id : strList){
+        for (String id : strList) {
             long longId = 0L;
-            try{
+            try {
                 longId = Long.parseLong(id);
-            }catch (Exception e){
+            } catch (Exception e) {
                 return false;
             }
 
-            if(longId > 0){
+            if (longId > 0) {
                 bannerRepository.deleteById(longId);
             }
         }
 
         return true;
+    }
+
+    @Override
+    public List<BannerDto> mainList() {
+        List<Banner> bannerList = bannerRepository.findAll();
+        if (bannerList.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return BannerDto.of(bannerList.stream()
+                .filter(Banner::isPublic)
+                .collect(Collectors.toList())
+        );
     }
 }
