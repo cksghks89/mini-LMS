@@ -56,6 +56,10 @@
         <p>가격: <span th:text="${detail.price}"></span></p>
         <p>할인가격: <span th:text="${detail.salePrice}"></span></p>
     </div>
+
+    <div>
+        <img th:src="${detail.urlFileName}">
+    </div>
     <div>
         <form id="submitForm" method="get">
             <input type="hidden" name="id" th:value="${detail.id}">

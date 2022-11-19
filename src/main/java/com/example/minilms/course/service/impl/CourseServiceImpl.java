@@ -53,6 +53,8 @@ public class CourseServiceImpl implements CourseService {
                 .salePrice(parameter.getSalePrice())
                 .saleEndDt(saleEndDt)
                 .categoryId(parameter.getCategoryId())
+                .fileName(parameter.getFileName())
+                .urlFileName(parameter.getUrlFileName())
                 .build();
 
         courseRepository.save(course);
@@ -99,6 +101,8 @@ public class CourseServiceImpl implements CourseService {
         course.setPrice(parameter.getPrice());
         course.setSalePrice(parameter.getSalePrice());
         course.setSaleEndDt(saleEndDt);
+        course.setFileName(parameter.getFileName());
+        course.setUrlFileName(parameter.getUrlFileName());
         courseRepository.save(course);
 
         return true;
