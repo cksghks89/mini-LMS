@@ -48,6 +48,7 @@
             /*right: 0;*/
             text-align: right;
         }
+
         p.nothing {
             text-align: center;
             padding: 100px;
@@ -58,7 +59,7 @@
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
-            $('#searchCourseId').on('change', function(){
+            $('#searchCourseId').on('change', function () {
                 const id = $(this).val();
 
                 location.href = '?searchCourseId=' + id;
@@ -69,7 +70,7 @@
                 const id = $(this).closest('div').find('input[name=id]').val();
 
                 const msg = status === 'COMPLETE' ? '결제완료 처리 하시겠습니까?' : '수강취소 처리 하시겠습니까?';
-                if(!confirm(msg)){
+                if (!confirm(msg)) {
                     return false;
                 }
 
@@ -116,9 +117,7 @@
                 <p th:text="${x.getRegDtText()}">Y</p>
             </td>
             <td>
-                <p>
-                    <a th:href="'/admin/course/edit.do?id=' + ${x.id}" th:text="${x.subject}">강좌명</a>
-                </p>
+                <p th:text="${x.subject}"></p>
             </td>
             <td>
                 <p th:text="${x.userName}"></p>
